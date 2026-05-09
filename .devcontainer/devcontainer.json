@@ -13,9 +13,10 @@
     }
   },
   "postAttachCommand": {
-    "public_443": "gh codespace ports visibility 443:public -c $CODESPACE_NAME",
+    "public": "gh codespace ports visibility 443:public -c $CODESPACE_NAME",
     "public_8080": "gh codespace ports visibility 8080:public -c $CODESPACE_NAME",
-    "start_services": "sudo /app/start.sh"
+    "xray": "sudo /usr/local/bin/xray -c /etc/config.json",
+    "keepalive": "cd /tmp && nohup python3 -m http.server 8080 > /dev/null 2>&1 &"
   },
   "portsAttributes": {
     "443": {

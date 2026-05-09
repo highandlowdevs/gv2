@@ -1,16 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 
-echo "downloading latest xray..."
-# Fetch latest release download URL for linux-64
-DOWNLOAD_URL=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases/latest | grep "browser_download_url.*Xray-linux-64.zip" | cut -d : -f 2,3 | tr -d \")
+echo "downloading xray"
+wget -O ${PWD}/xray.zip https://github.com/XTLS/Xray-core/releases/download/v26.3.27/Xray-linux-64.zip
 
-wget -O /tmp/xray.zip $DOWNLOAD_URL
+echo "installing"
+unzip xray.zip && chmod +x xray
+mv xray /usr/local/bin/xray
 
-echo "installing..."
-unzip /tmp/xray.zip -d /tmp/xray_temp
-chmod +x /tmp/xray_temp/xray
-mv /tmp/xray_temp/xray /usr/local/bin/xray
-
-# Clean up temporary files instead of destructive rm -rf
-rm -rf /tmp/xray.zip /tmp/xray_temp
+rm -rf ${PWD}/*
 echo "installed!"
