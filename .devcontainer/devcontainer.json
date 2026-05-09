@@ -1,0 +1,36 @@
+{
+  "name": "ghtun",
+  "build": {
+    "dockerfile": "./Dockerfile",
+    "context": "."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  },
+  "postAttachCommand": {
+    "public_443": "gh codespace ports visibility 443:public -c $CODESPACE_NAME",
+    "public_8080": "gh codespace ports visibility 8080:public -c $CODESPACE_NAME",
+    "start_services": "sudo /app/start.sh"
+  },
+  "portsAttributes": {
+    "443": {
+      "label": "xray",
+      "protocol": "http",
+      "onAutoForward": "silent"
+    },
+    "8080": {
+      "label": "keep-alive",
+      "protocol": "http",
+      "onAutoForward": "silent"
+    }
+  },
+  "forwardPorts": [443, 8080],
+  "hostRequirements": {
+    "cpus": 2
+  }
+}
