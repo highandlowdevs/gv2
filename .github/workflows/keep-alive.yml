@@ -1,0 +1,29 @@
+name: Keep Codespace Alive
+
+on:
+  schedule:
+    # اجرای اتوماتیک هر ۲۵ دقیقه
+    - cron: '*/25 * * * *'
+  workflow_dispatch: # قابلیت اجرای دستی
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping Codespace via GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          # پیدا کردن نام کُداسپیس متعلق به کاربر که در حالت Available (روشن) است
+          CS_NAME=$(gh codespace list --json name,state --jq '.[] | select(.state == "Available") | .name' | head -n 1)
+          
+          if [ -z "$CS_NAME" ]; then
+            echo "No active codespace found. Skipping."
+            exit 0
+          fi
+          
+          echo "Pinging Codespace: $CS_NAME"
+          # وصل شدن به سرور و اجرای یک دستور ساده برای ریست کردن تایمر خاموشی
+          gh codespace ssh -c $CS_NAME -- "echo 'Keep-alive ping at $(date)' > /tmp/keepalive.log"
+          echo "Ping successful!"
