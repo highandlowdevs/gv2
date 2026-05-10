@@ -2,9 +2,8 @@ name: Keep Codespace Alive
 
 on:
   schedule:
-    # اجرای اتوماتیک هر ۲۰ دقیقه (برای جبران تاخیرهای گیت‌هاب)
     - cron: '*/20 * * * *'
-  workflow_dispatch: # قابلیت اجرای دستی
+  workflow_dispatch:
 
 jobs:
   keep-alive:
@@ -15,13 +14,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          # ۱. بررسی وجود توکن
           if [ -z "$GH_TOKEN" ]; then
             echo "ERROR: PAT_TOKEN is missing! Please add it to your Repository Secrets."
             exit 1
           fi
           
-          # ۲. پیدا کردن کُداسپیس (حتی اگر خاموش شده باشد)
           CS_NAME=$(gh codespace list --json name --jq '.[0].name')
           
           if [ -z "$CS_NAME" ] || [ "$CS_NAME" == "null" ]; then
@@ -31,13 +28,5 @@ jobs:
           
           echo "Found Codespace: $CS_NAME"
           
-          # ۳. روشن کردن سرور (اگر به خاطر تاخیر گیت‌هاب خاموش شده بود، بیدارش می‌کند)
-          echo "Ensuring Codespace is running..."
-          gh codespace start -c $CS_NAME || true
-          
-          # ۴. صبر برای بالا آمدن سرویس SSH
-          sleep 15
-          
-          # ۵. وصل شدن به سرور برای ریست کردن تایمر ۳۰ دقیقه‌ای
-          echo "Sending keep-alive ping..."
-          gh codespace ssh -c $CS_NAME -- "echo 'Ping at $(date)' > /tmp/keepalive.log" || echo "SSH ping failed, but start might be enough."
+          echo "Sending keep-alive ping via SSH..."
+          gh codespace ssh -c $CS_NAME -- "echo 'Ping at $(date)' > /tmp/keepalive.log"
