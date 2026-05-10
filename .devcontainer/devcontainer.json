@@ -17,8 +17,7 @@
   },
   "postAttachCommand": {
     "public": "gh codespace ports visibility 443:public -c $CODESPACE_NAME",
-    "public_8080": "gh codespace ports visibility 8080:public -c $CODESPACE_NAME",
-    "xray": "sudo pkill -f xray || true; sudo nohup /usr/local/bin/xray -c /etc/config.json > /tmp/xray.log 2>&1 &"
+    "start": "nohup bash /app/start.sh > /tmp/start.log 2>&1 &"
   },
   "portsAttributes": {
     "443": {
@@ -27,9 +26,7 @@
       "onAutoForward": "silent"
     }
   },
-  "forwardPorts": [
-    443
-  ],
+  "forwardPorts": [443],
   "hostRequirements": {
     "cpus": 2
   }
