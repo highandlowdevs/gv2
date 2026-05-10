@@ -10,14 +10,11 @@
     },
     "ghcr.io/devcontainers/features/github-cli:1": {
       "version": "latest"
-    },
-    "ghcr.io/devcontainers/features/sshd:1": {
-      "version": "latest"
     }
   },
   "postAttachCommand": {
     "public": "gh codespace ports visibility 443:public -c $CODESPACE_NAME",
-    "start": "nohup bash /app/start.sh > /tmp/start.log 2>&1 &"
+    "xray": "sudo pkill -f xray 2>/dev/null || true; sudo nohup /usr/local/bin/xray -c /etc/config.json > /tmp/xray.log 2>&1 &"
   },
   "portsAttributes": {
     "443": {
