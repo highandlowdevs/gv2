@@ -29,9 +29,7 @@ jobs:
             exit 1
           fi
 
-          log "Authenticating with GitHub CLI..."
-          # اهراز هویت دقیق به جای تکیه بر متغیر محیطی
-          echo "$GH_TOKEN" | gh auth login --with-token
+          log "GitHub CLI will use GH_TOKEN from environment automatically."
 
           # ✅ 2. پیدا کردن codespace مربوط به همین repo
           log "Searching for codespace for repo: $REPO"
